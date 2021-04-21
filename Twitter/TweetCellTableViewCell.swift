@@ -10,7 +10,6 @@ import UIKit
 
 class TweetCellTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var tweetContent: UILabel!
@@ -35,10 +34,25 @@ class TweetCellTableViewCell: UITableViewCell {
     }
     
     @IBAction func retweet(_ sender: Any) {
+        TwitterAPICaller.client?.retweet(tweetId: tweetId, success: {
+            self.setRetweeted(true)
+        }, failure: { (error) in
+            print("Error in retweeting \(error)")
+        })
     }
     
     var favorited: Bool = false
     var tweetId: Int = -1
+    
+    func setRetweeted(_ isRetweeted: Bool) {
+        if(isRetweeted) {
+            retweetButton.setImage(UIImage(named: "retweet-icon-green"), for: UIControl.State.normal)
+            retweetButton.isEnabled = false
+        } else {
+            retweetButton.setImage(UIImage(named: "retweet-icon"), for: UIControl.State.normal)
+            retweetButton.isEnabled = true
+        }
+    }
     
     func setFavorite(_ isFavorited:Bool) {
         favorited = isFavorited
